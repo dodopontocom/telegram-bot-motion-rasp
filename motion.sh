@@ -34,8 +34,9 @@ curl_cmd() {
 }
 
 # Looking for dependencies
-which curl || echo -e "First run:\nsudo apt-get install -y curl"
-which motion || echo -e "First run:\nsudo apt-get install -y motion"
+lsusb | grep -i webcam || echo "==============\nVerifique se a webcam está bem conectada!!!\n=============="
+which curl || echo -e "==============\nFirst run:\nsudo apt-get install -y curl\n=============="
+which motion || echo -e "==============\nFirst run:\nsudo apt-get install -y motion\n=============="
 
 # Adding the custom config file
 if [[ ! -f ${send_file_path} ]]; then
