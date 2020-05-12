@@ -5,7 +5,7 @@ export BASEDIR="$(cd $(dirname ${BASH_SOURCE[0]}) >/dev/null 2>&1 && pwd)"
 source ${BASEDIR}/.definitions.sh
 
 config_file="${BASEDIR}/config/motion.conf"
-send_file_path="/home/${USER}/.motion"
+send_file_path="/home/pi/.motion"
 api_url="https://api.telegram.org"
 
 # Send the file command
