@@ -36,10 +36,7 @@ else
 fi
 
 # Run Motion in daemon mode with custom config file
-if [[ -f ${send_file_path}/motion.pid ]]; then
-	kill -9 $(head -1 ${send_file_path}/motion.pid)
-	/usr/bin/motion -b -c ${send_file_path}/motion.conf
-else
+if [[ ! -f ${send_file_path}/motion.pid ]]; then
 	/usr/bin/motion -b -c ${send_file_path}/motion.conf
 fi
 
@@ -49,7 +46,6 @@ has_file=($(find ${send_file_path} -name "*.${file_extension}"))
 if [[ -n ${has_file} ]]; then
 	for f in ${has_file[@]}; do
 		curl_cmd ${f}
+		mv ${f} ${f}.disabled
 	done
-else
-	curl_cmd
 fi
