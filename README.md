@@ -20,7 +20,7 @@ A helper to install motion detection into your raspberry PI and send detected mo
 - curl
 - motion
 - usb webcam connected to your rasp
-- personal telegram bot (api token)
+- personal telegram bot (api token)[learn](https://core.telegram.org/bots)
 - your telegram id (id destination that the messages will be sent)
 
 ## How to run (run it on your raspberry)
