@@ -13,7 +13,14 @@ curl_cmd() {
 	local file message
 	file=$1
 	if [[ -n ${file} ]]; then
+		message="Enviando arquivo: ${file}"
+		curl --silent -X POST \
+                 -d chat_id=${NOTIFICATION_ID} \
+                 -d text="${message}" \
+                 ${api_url}/bot${TELEGRAM_TOKEN}/sendMessage &> /dev/null
+
 		curl --silent -F document=@"${file}" ${api_url}/bot${TELEGRAM_TOKEN}/sendDocument?chat_id=${NOTIFICATION_ID} &> /dev/null
+		
 		message="Arquivo enviado com sucesso! ${file}"
 		echo "${message}"
 	else
