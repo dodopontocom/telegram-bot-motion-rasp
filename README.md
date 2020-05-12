@@ -1,4 +1,4 @@
-<<<(work in progress)>>>
+![stability-wip](https://img.shields.io/badge/stability-work_in_progress-lightgrey.svg)
 
 # telegram-bot-motion-rasp
 
