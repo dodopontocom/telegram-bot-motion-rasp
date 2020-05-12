@@ -13,13 +13,13 @@ curl_cmd() {
 	local file message
 	file=$1
 	if [[ -n ${file} ]]; then
-		curl --silent -F document=@"${file}" ${api_url}/bot${TELEGRAM_TOKEN}/sendDocument?chat_id=${NOTIFICATION_ID}
+		curl --silent -F document=@"${file}" ${api_url}/bot${TELEGRAM_TOKEN}/sendDocument?chat_id=${NOTIFICATION_ID} &> /dev/null
 	else
 		message="Nenhum arquivo encontrado no momento"
 		curl --silent -X POST \
                 -d chat_id=${NOTIFICATION_ID} \
                 -d text="${message}" \
-                ${api_url}/bot${TELEGRAM_TOKEN}/sendMessage
+                ${api_url}/bot${TELEGRAM_TOKEN}/sendMessage &> /dev/null
 	fi
 }
 
