@@ -2,7 +2,17 @@
 
 # telegram-bot-motion-rasp
 
-A helper to install motion detection into your raspberry PI and send detected motions via telegram bot.  
+A helper to install motion detection into your raspberry PI and send detected motions via telegram bot.
+
+## Good for?
+
+- monitoring houses
+- monitoring babies
+- watching birds
+- monitoring pets
+- monitoring harmful insects
+- employees
+- (...)
 
 ## Dependencies
 - internet connection
