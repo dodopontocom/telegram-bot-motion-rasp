@@ -37,7 +37,7 @@ bash ./motion.sh
 ```
 ## Crontab -e
 
-A good think to do is adding the script to a crontab job to run the verification any time you desire
+a good think to do is adding the script to a crontab job to run the verification any time you desire
 
 ```sh
 crontab -e
