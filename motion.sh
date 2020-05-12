@@ -10,9 +10,17 @@ api_url="https://api.telegram.org"
 
 # Send the file command
 curl_cmd() {
-	local file
+	local file message
 	file=$1
-	curl --silent -F document=@"${file}" ${api_url}/bot${TELEGRAM_TOKEN}/sendDocument?chat_id=${NOTIFICATION_ID}
+	if [[ -n ${file} ]]; then
+		curl --silent -F document=@"${file}" ${api_url}/bot${TELEGRAM_TOKEN}/sendDocument?chat_id=${NOTIFICATION_ID}
+	else
+		message="Nenhum arquivo encontrado no momento"
+		curl --silent -X POST \
+                -d chat_id=${NOTIFICATION_ID} \
+                -d text="${message}" \
+                ${api_url}/bot${TELEGRAM_TOKEN}/sendMessage
+	fi
 }
 
 # Looking for dependencies
@@ -20,11 +28,20 @@ which curl || echo -e "First run:\nsudo apt-get install -y curl"
 which motion || echo -e "First run:\nsudo apt-get install -y motion"
 
 # Adding the custom config file
-mkdir -p ${send_file_path}
-cp ${config_file} ${send_file_path}
+if [[ ! -f ${send_file_path} ]]; then
+	mkdir -p ${send_file_path}
+	cp ${config_file} ${send_file_path}
+else
+	cp ${config_file} ${send_file_path}
+fi
 
 # Run Motion in daemon mode with custom config file
-/usr/bin/motion -b -c ${send_file_path}/motion.conf
+if [[ -f ${send_file_path}/motion.pid ]]; then
+	kill -9 $(head -1 ${send_file_path}/motion.pid)
+	/usr/bin/motion -b -c ${send_file_path}/motion.conf
+else
+	/usr/bin/motion -b -c ${send_file_path}/motion.conf
+fi
 
 file_extension="mkv"
 
@@ -34,5 +51,5 @@ if [[ -n ${has_file} ]]; then
 		curl_cmd ${f}
 	done
 else
-	echo "No file found..."
+	curl_cmd
 fi
