@@ -47,7 +47,7 @@ else
 fi
 
 # Run Motion in daemon mode with custom config file
-if [[ ! -f ${send_file_path}/motion.pid ]]; then
+if [[ ! $(ps -ef | grep "$(head -1 ${send_file_path}/motion.pid)") ]]; then
 	/usr/bin/motion -b -c ${send_file_path}/motion.conf
 fi
 
