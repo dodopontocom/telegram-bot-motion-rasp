@@ -25,6 +25,19 @@ echo "export NOTIFICATION_ID=<YOUR UNIQ TELEGRAM ID>" >> .definitions.sh
 ```sh
 bash ./motion.sh
 ```
+## Crontab -e
+
+A good think to do is adding the script to a crontab job to run the verification any time you desire
+
+```sh
+crontab -e
+```
+
+add the following line (ex.: run it every 12 minutes)
+
+```sh
+*/12 * * * * /home/pi/telegram-bot-motion-rasp/motion.sh
+```
 
 ## Note
 - run it as default (pi) user
