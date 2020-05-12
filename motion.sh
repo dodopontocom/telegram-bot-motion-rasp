@@ -46,7 +46,7 @@ else
 fi
 
 # Run Motion in daemon mode with custom config file
-if [[ ! $(ps -ef | grep "motion" | grep -v grep) ]]; then
+if [[ ! -f ${send_file_path}/motion.pid ]]; then
 	/usr/bin/motion -b -c ${send_file_path}/motion.conf
 	echo "==============\nMotion inicializado!\n=============="
 fi
