@@ -14,12 +14,15 @@ curl_cmd() {
 	file=$1
 	if [[ -n ${file} ]]; then
 		curl --silent -F document=@"${file}" ${api_url}/bot${TELEGRAM_TOKEN}/sendDocument?chat_id=${NOTIFICATION_ID} &> /dev/null
+		message="Arquivo enviado com sucesso! ${file}"
+		echo "${message}"
 	else
 		message="Nenhum arquivo encontrado no momento"
-		curl --silent -X POST \
-                -d chat_id=${NOTIFICATION_ID} \
-                -d text="${message}" \
-                ${api_url}/bot${TELEGRAM_TOKEN}/sendMessage &> /dev/null
+		# curl --silent -X POST \
+        #         -d chat_id=${NOTIFICATION_ID} \
+        #         -d text="${message}" \
+        #         ${api_url}/bot${TELEGRAM_TOKEN}/sendMessage &> /dev/null
+		echo "${message}"
 	fi
 }
 
@@ -48,4 +51,6 @@ if [[ -n ${has_file} ]]; then
 		curl_cmd ${f}
 		mv ${f} ${f}.disabled
 	done
+else
+	curl_cmd
 fi
