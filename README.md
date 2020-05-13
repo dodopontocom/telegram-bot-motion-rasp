@@ -49,6 +49,15 @@ add the following line (ex.: run it every 12 minutes)
 */12 * * * * /home/pi/telegram-bot-motion-rasp/motion.sh
 ```
 
-## Note
+## Notes
 - run it as default (pi) user
 - this version works better in Debian based distribution
+
+## Rasp+Cam
+
+![!image](./images/rasp_cam.png)
+
+## Bot+Notification
+
+![!image](./images/bot_sent.png)
+
