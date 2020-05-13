@@ -20,7 +20,7 @@ A helper to install motion detection into your raspberry PI and send detected mo
 - curl
 - motion
 - usb webcam connected to your rasp
-- personal telegram bot (api token)
+- personal telegram bot (api token) [learn](https://core.telegram.org/bots)
 - your telegram id (id destination that the messages will be sent)
 
 ## How to run (run it on your raspberry)
@@ -37,7 +37,7 @@ bash ./motion.sh
 ```
 ## Crontab -e
 
-A good think to do is adding the script to a crontab job to run the verification any time you desire
+a good think to do is adding the script to a crontab job to run the verification any time you desire
 
 ```sh
 crontab -e
