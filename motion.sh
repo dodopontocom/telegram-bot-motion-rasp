@@ -46,31 +46,31 @@ which curl || exitOnError "==============\nFirst run:\nsudo apt-get install -y c
 which motion || exitOnError "==============\nFirst run:\nsudo apt-get install -y motion\n=============="
 
 # Adding the custom config file
-if [[ ! -f ${send_file_path} ]]; then
+if [[ ! -d ${send_file_path} ]]; then
 	mkdir -p ${send_file_path}
-	echo "==============\nDiretório do motion criado!!!\n=============="
+	echo -e "==============\nDiretório do motion criado!!!\n=============="
 	cp ${config_file} ${send_file_path}
-	echo "==============\nArquivo de configuração copiado!\n=============="
+	echo -e "==============\nArquivo de configuração copiado!\n=============="
 else
 	cp ${config_file} ${send_file_path}
-	echo "==============\nArquivo de configuração copiado!\n=============="
+	echo -e "==============\nArquivo de configuração copiado!\n=============="
 fi
 
 # Run Motion in daemon mode with custom config file
 if [[ ! -f ${send_file_path}/motion.pid ]]; then
 	/usr/bin/motion -b -c ${send_file_path}/motion.conf
-	echo "==============\nMotion inicializado!\n=============="
+	echo -e "==============\nMotion inicializado!\n=============="
 fi
 
 has_file=($(find ${send_file_path} -name "*.${file_extension}"))
 if [[ -n ${has_file} ]]; then
-	echo "==============\nArquivos encontrados!\n=============="
+	echo -e "==============\nArquivos encontrados!\n=============="
 	for f in ${has_file[@]}; do
 		curl_cmd ${f}
-		echo "==============\nNotificação enviada para o usuário!\n=============="
+		echo -e "==============\nNotificação enviada para o usuário!\n=============="
 		mv ${f} ${f}.disabled
 	done
 else
-	echo "==============\nNenhum arquivo encontrado no momento\n=============="
+	echo -e "==============\nNenhum arquivo encontrado no momento\n=============="
 	curl_cmd
 fi
