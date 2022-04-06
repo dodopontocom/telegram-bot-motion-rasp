@@ -9,6 +9,9 @@ api_url="https://api.telegram.org"
 
 file_extension="mkv"
 
+#min size of file to send it. (~36k)
+minimumsize=35000
+
 exitOnError() {
   # usage: exitOnError <output_message> [optional: code (defaul:exit code)]
   code=${2:-$?}
@@ -23,20 +26,22 @@ exitOnError() {
 curl_cmd() {
 	local file message
 	file=$1
-	if [[ -n ${file} ]]; then
+	if [[ -f ${file} ]]; then
 		message="Enviando arquivo: ${file}"
 		curl --silent -X POST \
                  -d chat_id=${NOTIFICATION_ID} \
                  -d text="${message}" \
                  ${api_url}/bot${TELEGRAM_TOKEN}/sendMessage &> /dev/null
 
-		curl --silent -F document=@"${file}" ${api_url}/bot${TELEGRAM_TOKEN}/sendDocument?chat_id=${NOTIFICATION_ID} &> /dev/null
+		curl --silent -F \
+				document=@"${file}" \
+				${api_url}/bot${TELEGRAM_TOKEN}/sendDocument?chat_id=${NOTIFICATION_ID} &> /dev/null
 	else
-		message="Nenhum arquivo encontrado no momento"
-		# curl --silent -X POST \
-        #         -d chat_id=${NOTIFICATION_ID} \
-        #         -d text="${message}" \
-        #         ${api_url}/bot${TELEGRAM_TOKEN}/sendMessage &> /dev/null
+		message="$1"
+		curl --silent -X POST \
+                 -d chat_id=${NOTIFICATION_ID} \
+                 -d text="${message}" \
+                 ${api_url}/bot${TELEGRAM_TOKEN}/sendMessage &> /dev/null
 	fi
 }
 
@@ -66,11 +71,17 @@ has_file=($(find ${send_file_path} -name "*.${file_extension}"))
 if [[ -n ${has_file} ]]; then
 	echo -e "==============\nArquivos encontrados!\n=============="
 	for f in ${has_file[@]}; do
-		curl_cmd ${f}
-		echo -e "==============\nNotificação enviada para o usuário!\n=============="
-		mv ${f} ${f}.disabled
+		actualsize=$(wc -c <"${f}")
+		if [ ${actualsize} -ge ${minimumsize} ]; then
+			curl_cmd ${f}
+			echo -e "==============\nNotificação enviada para o usuário!\n=============="
+			mv ${f} ${f}.disabled
+		else
+			echo -e "==============\nArquivo muito pequeno (desconsiderando)\n=============="
+			mv ${f} ${f}.disabled
+		fi
 	done
 else
 	echo -e "==============\nNenhum arquivo encontrado no momento\n=============="
-	curl_cmd
+	curl_cmd "Nenhuma movimentação detectada por enquanto..."
 fi
