@@ -5,7 +5,6 @@ source ${BASEDIR}/.definitions.sh
 
 config_file="${BASEDIR}/config/motion.conf"
 send_file_path="/home/pi/.motion"
-api_url="https://api.telegram.org"
 
 file_extension="mkv"
 
@@ -61,8 +60,9 @@ else
 	echo -e "==============\nArquivo de configuração copiado!\n=============="
 fi
 
-# Run Motion in daemon mode with custom config file
-if [[ ! -f ${send_file_path}/motion.pid ]]; then
+# Run Motion in daemon mode with custom config file if not already started
+motionpid=$(ps -ef | grep "motion.conf" | grep -v grep | awk '{print $2}')
+if [[ -z ${motionpid} ]]; then
 	/usr/bin/motion -b -c ${send_file_path}/motion.conf
 	echo -e "==============\nMotion inicializado!\n=============="
 fi
