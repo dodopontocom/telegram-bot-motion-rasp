@@ -6,7 +6,8 @@ source ${BASEDIR}/.definitions.sh
 config_file="${BASEDIR}/config/motion.conf"
 send_file_path="/home/pi/.motion"
 
-file_extension="mkv"
+#this format has better support in telegram app
+file_extension="mp4"
 
 #min size of file to send it. (~36k)
 minimumsize=35000
@@ -33,8 +34,8 @@ curl_cmd() {
                  ${api_url}/bot${TELEGRAM_TOKEN}/sendMessage &> /dev/null
 
 		curl --silent -F \
-				document=@"${file}" \
-				${api_url}/bot${TELEGRAM_TOKEN}/sendDocument?chat_id=${NOTIFICATION_ID} &> /dev/null
+				video=@"${file}" \
+				${api_url}/bot${TELEGRAM_TOKEN}/sendVideo?chat_id=${NOTIFICATION_ID} &> /dev/null
 	else
 		message="$1"
 		curl --silent -X POST \
