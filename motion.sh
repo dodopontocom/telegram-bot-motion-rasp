@@ -83,5 +83,5 @@ if [[ -n ${has_file} ]]; then
 	done
 else
 	echo -e "==============\nNenhum arquivo encontrado no momento\n=============="
-	curl_cmd "Nenhuma movimentação detectada por enquanto..."
+	#curl_cmd "Nenhuma movimentação detectada por enquanto..."
 fi
