@@ -5,12 +5,17 @@ source ${BASEDIR}/.definitions.sh
 
 config_file="${BASEDIR}/config/motion.conf"
 send_file_path="/home/pi/.motion"
+backup_path="${send_file_path}/backup"
+
+[[ -d ${backup_path} ]] || mkdir ${backup_path}
 
 #this format has better support in telegram app
 file_extension="mp4"
 
 #min size of file to send it. (~36k)
 minimumsize=35000
+# max size
+maxsize=20000000
 
 exitOnError() {
   # usage: exitOnError <output_message> [optional: code (defaul:exit code)]
@@ -27,7 +32,7 @@ curl_cmd() {
 	local file message
 	file=$1
 	if [[ -f ${file} ]]; then
-		message="Enviando arquivo: ${file}"
+		message="Enviando arquivo: ${file##*/}"
 		curl --silent -X POST \
                  -d chat_id=${NOTIFICATION_ID} \
                  -d text="${message}" \
@@ -73,13 +78,18 @@ if [[ -n ${has_file} ]]; then
 	echo -e "==============\nArquivos encontrados!\n=============="
 	for f in ${has_file[@]}; do
 		actualsize=$(wc -c <"${f}")
-		if [ ${actualsize} -ge ${minimumsize} ]; then
+		if [[ ${actualsize} -ge ${minimumsize} ]] && [[ ${actualsize} -lt ${maxsize} ]]; then
 			curl_cmd ${f}
 			echo -e "==============\nNotificação enviada para o usuário!\n=============="
 			mv ${f} ${f}.disabled
+		elif [[ ${actualsize} -ge ${maxsize} ]]; then
+			echo -e "==============\nArquivo excede limite (salvando em backup)\n=============="
+			mv ${f} ${backup_path}/${f##*/}.disabled
+			curl_cmd "${f##*/} Não enviado. Movido para backup (maior que 20MB)"
 		else
 			echo -e "==============\nArquivo muito pequeno (desconsiderando)\n=============="
-			mv ${f} ${f}.disabled
+			mv ${f} ${backup_path}/${f##*/}.disabled
+			curl_cmd "${f##*/} Não enviado. Movido para backup (muito pequeno)"
 		fi
 	done
 else
