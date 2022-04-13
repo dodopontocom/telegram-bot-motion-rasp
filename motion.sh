@@ -11,11 +11,12 @@ backup_path="${send_file_path}/backup"
 
 #this format has better support in telegram app
 file_extension="mp4"
-
 #min size of file to send it. (~36k)
 minimumsize=35000
 # max size
 maxsize=20000000
+# porcentagem do uso de disco
+sdcardspace_limit=80
 
 exitOnError() {
   # usage: exitOnError <output_message> [optional: code (defaul:exit code)]
@@ -95,4 +96,11 @@ if [[ -n ${has_file} ]]; then
 else
 	echo -e "==============\nNenhum arquivo encontrado no momento\n=============="
 	#curl_cmd "Nenhuma movimentação detectada por enquanto..."
+fi
+
+currspace=$(df -h / | awk '{ print $5 }' | tail -n 1 | cut -d'%' -f1)
+if [[ ${currspace} -gt ${sdcardspace_limit} ]]; then
+	curl_cmd "!!! Usando ${currspace}% da capacidade de disco) Executando limpeza dos arquivos já enviados"
+	echo -e "==============\n!!! Usando ${currspace}% da capacidade de disco) Executando limpeza dos arquivos já enviados\n=============="
+	rm -vfr ${send_file_path}/*.disabled
 fi
